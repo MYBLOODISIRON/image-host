@@ -1,0 +1,6 @@
+cmake_minimum_required(VERSION 3.28.3)
+project(image-host)
+include_directory(./include)
+aux_source_directory(./ SRC_LIST)
+target_link_libraries(image-host MyReactor)
+add_exectuable(image-host ${SRC_LIST})
