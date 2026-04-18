@@ -28,7 +28,7 @@
     "Content-Type:application/json;charset=utf-8\r\n\r\n%s"
 
 
-HttpConnection::HttpConnection(TcpConnectionPtr& conn)
+HttpConnection::HttpConnection(const TcpConnectionPtr& conn)
 :   m_tcp_conn {conn}
 {
     m_uuid = std::any_cast<uint32_t>( conn->getContext());

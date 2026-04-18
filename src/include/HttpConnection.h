@@ -1,8 +1,7 @@
 #pragma once
 #include <memory>
-#include "TcpServer.h"
+#include "MyReactor.h"
 #include "http_parser_wrapper.h"
-using HttpConnPtr = std::shared_ptr<HttpConnection>;
 
 class HttpConnection: enable_shared_from_this<HttpConnection>
 {
@@ -12,7 +11,7 @@ class HttpConnection: enable_shared_from_this<HttpConnection>
         CHttpParserWrapper  m_http_parser;
 
     public:
-        HttpConnection  (TcpConnectionPtr& conn);
+        HttpConnection  (const TcpConnectionPtr& conn);
         virtual ~HttpConnection ();
         void    onRead          (Buffer* buf);
 
@@ -20,3 +19,4 @@ class HttpConnection: enable_shared_from_this<HttpConnection>
         int     handleRegistRequest (std::string& url, std::string& post_data);
         int     handleLoginRequest  (std::string& url, std::string& post_data);
 };
+using HttpConnPtr = std::shared_ptr<HttpConnection>;
