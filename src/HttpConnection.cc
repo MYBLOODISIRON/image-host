@@ -3,6 +3,7 @@
 #include "HttpConnection.h"
 #include "MyReactor.h"
 #include "url.h"
+#include "api.h"
 
 
 
@@ -84,11 +85,27 @@ void HttpConnection::onRead(Buffer* buf)
 
 int HttpConnection::handleRegistRequest(std::string& url, std::string& post_data)
 {
+    std::string resp_json;
+    int ret = apiRegistUser(post_data, resp_json);
     
+    char http_body [HTTP_RESPONSE_JSON_MAX];
+    uint32_t ulen { resp_json.length() };
+    snprintf(http_body, HTTP_RESPONSE_JSON_MAX, HTTP_RESPONSE_JSON, ulen, resp_json.c_str());
+
+    m_tcp_conn->send(http_body);
+    return 0;
 }
 
 
 int HttpConnection::handleLoginRequest(std::string& url, std::string& post_data)
 {
+    std::string resp_json;
+    int ret = apiUserLogin(post_data, resp_json);
 
+    char resp_body [HTTP_RESPONSE_JSON_MAX];
+    uint32_t ulen { resp_json.length() };
+    snprintf(resp_body, HTTP_RESPONSE_JSON_MAX, HTTP_RESPONSE_JSON, ulen, resp_json.c_str());
+    m_tcp_conn->send(resp_body);
+
+    return 0;
 }
