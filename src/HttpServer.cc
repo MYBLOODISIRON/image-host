@@ -20,10 +20,8 @@ void HttpServer::onConnection(const TcpConnectionPtr& conn)
         LOG_INFO("HttpServer::onConnection: new connection.\n");
         uint32_t uuid { m_conn_uuid_generator++ };
         conn->setContext(uuid);
-        
-        HttpConnPtr http_conn {std::make_shared<HttpConnection>(conn)};
-        sm_httpMap.insert(std::pair<uint32_t, HttpConnPtr>{uuid, http_conn});
 
+        sm_httpMap[uuid] = std::make_shared<HttpConnection>(conn);
     }
     else
     {
