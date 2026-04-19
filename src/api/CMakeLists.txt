@@ -1,4 +1,10 @@
 cmake_minimum_required(VERSION 3.28.3)
-include_directories(./include)
-aux_source_directory(./ SRC_LIST)
-add_library(api SHARED ${SRC_LIST})
+project(api LANGUAGES CXX)
+add_library(${PROJECT_NAME})
+target_include_directories(${PROJECT_NAME} PUBLIC ${CMAKE_CURRENT_SOURCE_DIR}/include)
+target_sources(${PROJECT_NAME} PRIVATE login.cc register.cc)
+
+include(FetchContent)
+FetchContent_Declare(MyReactor SOURCE_DIR ${CMAKE_CURRENT_SOURCE_DIR}/../my-reactor)
+FetchContent_MakeAvailable(MyReactor)
+target_link_libraries(${PROJECT_NAME} MyReactor)
