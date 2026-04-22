@@ -4,7 +4,7 @@
 ResultSet::ResultSet(MYSQL_RES *res)
 :   m_result    {res}
 {
-    int num_fields { mysql_num_fields(m_result) };
+    int num_fields { (int) mysql_num_fields(m_result) };
     MYSQL_FIELD *field { mysql_fetch_fields(m_result) };
 
     for(int i {0}; i < num_fields; i ++)
