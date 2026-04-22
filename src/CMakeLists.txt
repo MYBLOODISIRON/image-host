@@ -7,6 +7,6 @@ target_include_directories(${PROJECT_NAME} PRIVATE ${CMAKE_CURRENT_SOURCE_DIR}/i
 include(FetchContent)
 FetchContent_Declare(MyReactor SOURCE_DIR ${CMAKE_CURRENT_SOURCE_DIR}/my-reactor)
 FetchContent_Declare(api SOURCE_DIR ${CMAKE_CURRENT_SOURCE_DIR}/api)
-FetchContent_Declare(db-conn-pool SOURCE_DIR ${CMAKE_CURRENT_DIR}/db-conn-pool)
+FetchContent_Declare(db-conn-pool SOURCE_DIR ${CMAKE_CURRENT_SOURCE_DIR}/db-conn-pool)
 FetchContent_MakeAvailable(MyReactor api db-conn-pool)
 target_link_libraries(${PROJECT_NAME} MyReactor api db-conn-pool)

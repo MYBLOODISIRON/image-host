@@ -2,6 +2,7 @@
 #include "HttpServer.h"
 #include "HttpConnection.h"
 #include "MyReactor.h"
+std::map<uint32_t, HttpConnPtr> HttpServer::sm_httpMap;
 
 HttpServer::HttpServer(EventLoop* loop, const InetAddress& addr, const std::string& name, int num_event_loops)
 :   m_loop {loop}, m_tcpServer {loop, addr, name}

@@ -60,13 +60,13 @@ int encodeLoginJson(int code, const std::string& token, std::string& str_json)
 
 int verifyUserPassword(std::string& uname, std::string& token)
 {
-
+    return 0;
 }
 
 
 int setToken(std::string& uname, std::string& token)
 {
-
+    return 0;
 }
 
 
