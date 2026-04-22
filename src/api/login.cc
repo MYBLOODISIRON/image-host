@@ -1,7 +1,24 @@
 #include <iostream>
 #include <string>
 #include <jsoncpp/json/json.h>
+#include <uuid/uuid.h>
 #include "MyReactor.h"
+#include "db_pool.h"
+#include "common.h"
+#include "cache_pool.h"
+
+
+std::string generateUUID()
+{
+    uuid_t uuid;
+    uuid_generate_time_safe(uuid);
+
+    char str_uuid [40];
+    uuid_unparse(uuid, str_uuid);
+
+    return std::string {str_uuid};
+}
+
 
 int decodeLoginJson(const std::string& str_json, std::string& user_name, std::string& pwd)
 {
@@ -58,15 +75,56 @@ int encodeLoginJson(int code, const std::string& token, std::string& str_json)
 }
 
 
-int verifyUserPassword(std::string& uname, std::string& token)
+bool verifyUserPassword(std::string& uname, std::string& pwd)
 {
-    return 0;
+    bool ret {false};
+
+    DBManager *db_manager { DBManager::getInstance() };
+    DBConn *db_connection { db_manager->getConn("image_host_slave") };
+    AUTO_REL_DB_CONN(db_manager, db_connection);
+
+    std::string sql = FormatString("select password from user_info where user_name = '%s';", uname.c_str());
+    ResultSet *result { db_connection->executeQuery(sql.c_str(), sql.length()) };
+    if(result != nullptr && result->next())
+    {
+        std::string password = result->getString("password");
+        LOG_INFO("pwd in db: %s, pwd from user: %s.", password.c_str(), pwd.c_str());
+        if(password == pwd)
+        {
+            ret = true;
+        }
+        else
+        {
+            ret = false;
+        }   
+    }
+    else    // 用户不存在
+    {
+        ret = false;
+    }
+    delete result;
+    return ret;
 }
 
 
-int setToken(std::string& uname, std::string& token)
+bool setToken(std::string& uname, std::string& token)
 {
-    return 0;
+    bool retval {true};
+    CacheManager *cache_manager = CacheManager::getInstance();
+    CacheConn *cache_connection = cache_manager->GetCacheConn("token");
+    AUTO_REL_CACHECONN(cache_manager, cache_connection);
+
+    token = generateUUID();
+    if(cache_connection != nullptr)
+    {
+        cache_connection->SetEx(token, 86400, uname);   // token - uname键值对，24小时有效
+    }
+    else
+    {
+        retval = false;
+    }
+
+    return retval;
 }
 
 

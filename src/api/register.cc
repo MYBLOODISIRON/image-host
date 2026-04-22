@@ -1,7 +1,10 @@
 #include <string>
 #include <iostream>
 #include <jsoncpp/json/json.h>
+#include <time.h>
 #include "MyReactor.h"
+#include "db_pool.h"
+#include "common.h"
 
 
 int decodeRegistJson(const std::string& str_json, std::string& uname, std::string& nick_name, std::string& pwd, std::string& phone, std::string& email)
@@ -67,7 +70,66 @@ int encodeRegistJson(int code, std::string& str_json)
 
 int registUser(const std::string& uname, const std::string& nick_name, const std::string& pwd, const std::string& phone, const std::string& email)
 {
-    return 0;
+    // return value: =0 success, =2 user has exist, =1 exception.
+    int ret {0};
+    uint32_t user_id {0};
+    
+    DBManager* db_manager = DBManager::getInstance();
+    DBConn* db_connection = db_manager->getConn("image_host_master");
+    AUTO_REL_DB_CONN(db_manager, db_connection);    // 栈上对象自动释放
+    if(db_connection == nullptr)
+    {
+        LOG_ERROR("get db connection failed.");
+        return 1;
+    }
+    char tmp [256];
+    snprintf(tmp, 256, "select id from user_info where user_name = '%s';", uname.c_str());
+
+    std::string sql { tmp }; // 查找用户是否已经存在
+    ResultSet* result_set = db_connection->executeQuery(sql.c_str(), sql.length());
+    if(result_set != nullptr && result_set->next())
+    {   // 用户已存在
+        ret = 2;
+    }
+    else
+    {   // 用户不存在
+
+        time_t regist_time;
+        regist_time = time(nullptr);
+        char regist_time_fstr[TIME_STRING_LEN];
+        strftime(regist_time_fstr, TIME_STRING_LEN - 1, "%Y-%m-%d %H:%M:%S", localtime(&regist_time));
+
+        sql =   "insert into user_info"
+                "(`usr_name`, `nick_name`, `password`, `phone`, `email`, `create_time`)"
+                "values(?,?,?,?,?,?);";
+        
+        LOG_INFO("execute sql: %s", sql.c_str());
+        PrepareStatement* stmt = new PrepareStatement {};
+        if(stmt->init(db_connection->mysql(), sql))
+        {
+            uint32_t index {0};
+            stmt->setParam(index ++, uname);
+            stmt->setParam(index ++, nick_name);
+            stmt->setParam(index ++, pwd);
+            stmt->setParam(index ++, phone);
+            stmt->setParam(index ++, email);
+            stmt->setParam(index ++, regist_time_fstr);
+            if(stmt->executeUpdate())
+            {
+                ret = 0;
+                user_id = db_connection->getInsertId();
+                LOG_INFO("insert table user_info success. user_id: %u, user_name: %s.", user_id, uname.c_str());
+            }
+            else
+            {
+                LOG_ERROR("insert table user_info failed.");
+                ret = 1;
+            }
+        }
+        delete stmt;
+    }
+
+    return ret;
 }
 
 
