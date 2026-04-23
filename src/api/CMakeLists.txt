@@ -2,7 +2,7 @@ cmake_minimum_required(VERSION 3.28.3)
 project(api LANGUAGES CXX)
 add_library(${PROJECT_NAME})
 target_include_directories(${PROJECT_NAME} PUBLIC ${CMAKE_CURRENT_SOURCE_DIR}/include)
-target_sources(${PROJECT_NAME} PRIVATE login.cc register.cc common.cc)
+target_sources(${PROJECT_NAME} PRIVATE login.cc register.cc common.cc upload.cc)
 
 include(FetchContent)
 FetchContent_Declare(MyReactor SOURCE_DIR ${CMAKE_CURRENT_SOURCE_DIR}/../my-reactor)
