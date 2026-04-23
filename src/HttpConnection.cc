@@ -45,7 +45,7 @@ HttpConnection::~HttpConnection()
 void HttpConnection::onRead(Buffer* buf)
 {
     const char* in_buffer { buf->peek() };
-    int32_t len { buf->readableBytes() };
+    uint32_t len {(uint32_t) buf->readableBytes() };
 
     m_http_parser.ParseHttpContent(in_buffer, len);
     if(m_http_parser.IsReadAll())
@@ -75,7 +75,7 @@ void HttpConnection::onRead(Buffer* buf)
             default:{
                 char resp_content [256];
                 std::string str_json = "{\"code\": 1}";
-                uint32_t len_json {str_json.size()};
+                uint32_t len_json {(uint32_t)str_json.size()};
 
                 #define HTTP_RESPONSE_REQ                                                     \
                 "HTTP/1.1 404 OK\r\n"                                                      \
@@ -97,7 +97,7 @@ int HttpConnection::handleRegistRequest(std::string& url, std::string& post_data
     int ret = apiRegistUser(post_data, resp_json);
     
     char http_body [HTTP_RESPONSE_JSON_MAX];
-    uint32_t ulen { resp_json.length() };
+    uint32_t ulen { (uint32_t)resp_json.length() };
     snprintf(http_body, HTTP_RESPONSE_JSON_MAX, HTTP_RESPONSE_JSON, ulen, resp_json.c_str());
 
     m_tcp_conn->send(http_body);
@@ -111,7 +111,7 @@ int HttpConnection::handleLoginRequest(std::string& url, std::string& post_data)
     int ret = apiUserLogin(post_data, resp_json);
 
     char resp_body [HTTP_RESPONSE_JSON_MAX];
-    uint32_t ulen { resp_json.length() };
+    uint32_t ulen { (uint32_t)resp_json.length() };
     snprintf(resp_body, HTTP_RESPONSE_JSON_MAX, HTTP_RESPONSE_JSON, ulen, resp_json.c_str());
     m_tcp_conn->send(resp_body);
 
@@ -124,7 +124,7 @@ int HttpConnection::handleUpLoadRequest(std::string& url, std::string& post_data
     std::string resp_json;
     int ret = apiUpload(post_data, resp_json);
     char resp_body [HTTP_RESPONSE_JSON_MAX];
-    uint32_t ulen { resp_json.length() };
+    uint32_t ulen { (uint32_t)resp_json.length() };
     snprintf(resp_body, HTTP_RESPONSE_JSON_MAX, HTTP_RESPONSE_JSON, ulen, resp_json.c_str());
     m_tcp_conn->send(resp_body);
 
@@ -136,7 +136,7 @@ int HttpConnection::handleMd5Request(std::string& url, std::string& post_data)
     std::string resp_json;
     int ret = apiMd5(post_data, resp_json);
     char resp_body [HTTP_RESPONSE_JSON_MAX];
-    uint32_t ulen { resp_json.length() };
+    uint32_t ulen { (uint32_t)resp_json.length() };
     snprintf(resp_body, HTTP_RESPONSE_JSON_MAX, HTTP_RESPONSE_JSON, ulen, resp_json.c_str());
     m_tcp_conn->send(resp_body);
 
