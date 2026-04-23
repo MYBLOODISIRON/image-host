@@ -1,7 +1,7 @@
 cmake_minimum_required(VERSION 3.28.3)
 project(image-host LANGUAGES CXX)
 add_executable(${PROJECT_NAME})
-target_sources(${PROJECT_NAME} PRIVATE http_parser_wrapper.cc http_parser.cc HttpConnection.cc HttpServer.cc main.cc url.cc util.cc)
+target_sources(${PROJECT_NAME} PRIVATE http_parser_wrapper.cc http_parser.cc HttpConnection.cc HttpServer.cc main.cc url.cc util.cc config_file_reader.cc)
 target_include_directories(${PROJECT_NAME} PRIVATE ${CMAKE_CURRENT_SOURCE_DIR}/include)
 
 include(FetchContent)
