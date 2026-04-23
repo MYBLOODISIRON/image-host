@@ -121,3 +121,33 @@ void DBPool::releaseConnection(DBConn *connection)
     }
 }
 
+
+const std::string& DBPool::getPoolName()
+{
+    return m_pool_name;
+}
+
+const std::string& DBPool::getIp()
+{
+    return m_ip;
+}
+
+uint16_t DBPool::getPort()
+{
+    return m_port;
+}
+
+const std::string& DBPool::getUserName()
+{
+    return m_user_name;
+}
+
+const std::string& DBPool::getPwd()
+{
+    return m_pwd;
+}
+
+const std::string& DBPool::getDBName()
+{
+    return m_db_name;
+}

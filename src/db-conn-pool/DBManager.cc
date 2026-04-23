@@ -1,6 +1,9 @@
 #include "db_pool.h"
 #include "config_file_reader.h"
 
+DBManager* DBManager::sm_db_manager;
+std::string DBManager::sm_config_path;
+
 DBManager* DBManager::getInstance()
 {
     if(sm_db_manager == nullptr)
