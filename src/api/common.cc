@@ -26,7 +26,7 @@ std::string FormatString(const std::string& format, Args... args)
 int TrimSpace(char* inbuf)
 {
     int i {0};
-    int j{strlen(inbuf) - 1};
+    int j{(int) strlen(inbuf) - 1};
     char *str = inbuf;
 
     int count {0};

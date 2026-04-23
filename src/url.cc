@@ -4,7 +4,9 @@ using namespace url;
 const char* url_str []
 {
     "api/reg",
-    "api/login"
+    "api/login",
+    "api/upload",
+    "api/md5"
 };
 
 

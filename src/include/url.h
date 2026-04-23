@@ -8,6 +8,8 @@ namespace url
 
         URLID_REG = URLID_START,
         URLID_LOGIN,
+        URLID_UPLOAD,
+        URLID_MD5,
 
         URLID_END
     };

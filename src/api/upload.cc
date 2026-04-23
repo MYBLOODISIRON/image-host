@@ -123,6 +123,7 @@ bool getFullUrlByFileId(std::string& fileid, std::string& fdfs_file_url)
 
         LOG_ERROR("execlp fdfs_file_info error");
         close(pfd[1]);
+        return false;
     }
     else
     {
