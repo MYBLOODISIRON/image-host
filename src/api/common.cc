@@ -151,3 +151,45 @@ int VerifyToken(std::string &user_name, std::string &token) {
 
     return ret;
 }
+
+
+std::string RandomString(const int len)
+{
+    std::string str;
+    char c;
+    int index;
+    for(index = 0; index < len; index ++)
+    {
+        c = 'a' + rand() % 26;
+        str.push_back(c);
+    }
+
+    return str;
+}
+
+
+int getSharedPictureCountByUsername(DBConn* connection, std::string& user_name, int& count)
+{
+    count = 0;
+    int ret {0};
+    std::string sql {FormatString("selece count(*) from share_picture_list where user = '%s';", user_name.c_str())};
+    
+    ResultSet *result = connection->executeQuery(sql.c_str(), sql.length());
+    if(result && result->next())
+    {
+        count = result->getInt("count(*)");
+        ret = 0;
+        delete result;
+    }
+    else if(! result)
+    {
+        ret = -1;
+    }
+    else
+    {
+        ret = 0;
+        delete result;
+    }
+
+    return ret;
+}

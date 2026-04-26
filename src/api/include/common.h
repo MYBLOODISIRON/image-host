@@ -1,5 +1,6 @@
 #pragma once
 #include <string>
+#include "db_pool.h"
 #define SQL_MAX_LEN (512) // sql语句长度
 
 
@@ -59,3 +60,8 @@ int QueryParseKeyValue(const char *query, const char *key, char *value, int *val
 
 //验证登陆token，成功返回0，失败-1
 int VerifyToken(std::string &user_name, std::string &token);
+
+
+std::string RandomString(const int len);
+
+int getSharedPictureCountByUsername(DBConn* connection, std::string& user_name, int& count);
