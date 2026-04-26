@@ -2,6 +2,7 @@
 #include <memory>
 #include <string.h>
 #include "common.h"
+#include "cache_pool.h"
 
 std::string s_dfs_path_client;
 std::string s_storage_web_server_ip;
@@ -85,4 +86,68 @@ int GetFileSuffix(const char *file_name, char *suffix) {
     }
 
     return 0;
+}
+
+
+/**
+ * @brief  解析url query 类似 abc=123&bbb=456 字符串
+ *          传入一个key,得到相应的value
+ * @returns
+ *          0 成功, -1 失败
+ */
+int QueryParseKeyValue(const char *query, const char *key, char *value,
+                       int *value_len_p) {
+    char *temp = NULL;
+    char *end = NULL;
+    int value_len = 0;
+
+    //找到是否有key
+    temp = (char *)strstr(query, key);
+    if (temp == NULL) {
+        return -1;
+    }
+
+    temp += strlen(key); //=
+    temp++;              // value
+
+    // get value
+    end = temp;
+
+    while ('\0' != *end && '#' != *end && '&' != *end) {
+        end++;
+    }
+
+    value_len = end - temp;
+
+    strncpy(value, temp, value_len);
+    value[value_len] = '\0';
+
+    if (value_len_p != NULL) {
+        *value_len_p = value_len;
+    }
+
+    return 0;
+}
+
+
+
+//验证登陆token，成功返回0，失败-1
+int VerifyToken(std::string &user_name, std::string &token) {
+    int ret = 0;
+    CacheManager *cache_manager = CacheManager::getInstance();
+    CacheConn *cache_conn = cache_manager->GetCacheConn("token");
+    AUTO_REL_CACHECONN(cache_manager, cache_conn);
+
+    if (cache_conn) {
+        std::string temp_user_name  = cache_conn->Get(token);    //校验token和用户名的关系
+        if (temp_user_name == user_name) {
+            ret = 0;
+        } else {
+            ret = -1;
+        }
+    } else {
+        ret = -1;
+    }
+
+    return ret;
 }

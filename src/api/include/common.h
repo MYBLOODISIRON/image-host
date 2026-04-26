@@ -52,5 +52,10 @@ std::string FormatString(const std::string& format, Args... args)
 
 int TrimSpace(char *inbuf);
 
-
 int GetFileSuffix(const char *file_name, char *suffix);
+
+int QueryParseKeyValue(const char *query, const char *key, char *value, int *value_len_p);
+
+
+//验证登陆token，成功返回0，失败-1
+int VerifyToken(std::string &user_name, std::string &token);
