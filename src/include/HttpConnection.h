@@ -20,5 +20,7 @@ class HttpConnection: enable_shared_from_this<HttpConnection>
         int     handleLoginRequest  (std::string& url, std::string& post_data);
         int     handleMd5Request    (std::string& url, std::string& post_data);
         int     handleUpLoadRequest (std::string& url, std::string& post_data);
+        int     handleMyFilesRequest(std::string& url, std::string& post_data);
+        int     handleSharePictureRequest(std::string& url, std::string& post_data);
 };
 using HttpConnPtr = std::shared_ptr<HttpConnection>;

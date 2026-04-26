@@ -72,6 +72,14 @@ void HttpConnection::onRead(Buffer* buf)
                 handleMd5Request(url, content);
                 break;
             }
+            case url::URLID_MYFILES:{
+                handleMyFilesRequest(url, content);
+                break;
+            }
+            case url::URLID_SHAREPICTURE:{
+                handleSharePictureRequest(url, content);
+                break;
+            }
             default:{
                 char resp_content [256];
                 std::string str_json = "{\"code\": 1}";
@@ -135,6 +143,31 @@ int HttpConnection::handleMd5Request(std::string& url, std::string& post_data)
 {
     std::string resp_json;
     int ret = apiMd5(post_data, resp_json);
+    char resp_body [HTTP_RESPONSE_JSON_MAX];
+    uint32_t ulen { (uint32_t)resp_json.length() };
+    snprintf(resp_body, HTTP_RESPONSE_JSON_MAX, HTTP_RESPONSE_JSON, ulen, resp_json.c_str());
+    m_tcp_conn->send(resp_body);
+
+    return 0;
+}
+
+
+int HttpConnection::handleMyFilesRequest(std::string& url, std::string& post_data)
+{
+    std::string resp_json;
+    int ret = apiMyfiles(url, post_data, resp_json);
+    char resp_body [HTTP_RESPONSE_JSON_MAX];
+    uint32_t ulen { (uint32_t)resp_json.length() };
+    snprintf(resp_body, HTTP_RESPONSE_JSON_MAX, HTTP_RESPONSE_JSON, ulen, resp_json.c_str());
+    m_tcp_conn->send(resp_body);
+
+    return 0;
+}
+
+int HttpConnection::handleSharePictureRequest(std::string& url, std::string& post_data)
+{
+    std::string resp_json;
+    int ret = apiSharePicture(url, post_data, resp_json);
     char resp_body [HTTP_RESPONSE_JSON_MAX];
     uint32_t ulen { (uint32_t)resp_json.length() };
     snprintf(resp_body, HTTP_RESPONSE_JSON_MAX, HTTP_RESPONSE_JSON, ulen, resp_json.c_str());

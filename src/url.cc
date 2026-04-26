@@ -3,10 +3,12 @@ using namespace url;
 
 const char* url_str []
 {
-    "api/reg",
-    "api/login",
-    "api/upload",
-    "api/md5"
+    "/api/reg",
+    "/api/login",
+    "/api/upload",
+    "/api/md5",
+    "/api/myfiles",
+    "/api/sharepic"
 };
 
 

@@ -3,3 +3,5 @@
 #include "register.h"
 #include "upload.h"
 #include "md5.h"
+#include "myfiles.h"
+#include "sharepicture.h"

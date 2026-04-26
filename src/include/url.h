@@ -10,6 +10,8 @@ namespace url
         URLID_LOGIN,
         URLID_UPLOAD,
         URLID_MD5,
+        URLID_MYFILES,
+        URLID_SHAREPICTURE,
 
         URLID_END
     };
